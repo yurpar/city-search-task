@@ -1,11 +1,11 @@
 import express from 'express';
-const app = express();
+const main = express();
 const port = 3000;
 
-app.get('/', (req, res) => {
+main.get('/', (req, res) => {
     res.json({ status: "OK" });
 });
 
-app.listen(port, () => {
+main.listen(port, () => {
     return console.log(`Express is listening at http://localhost:${port}`);
 });
