@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc --build",
     "clear": "rm -rf ./dist",
+    "dev": "nodemon --watch src src/main.ts",
     "start": "node dist/main.js",
     "test": "mocha"
   },
@@ -28,6 +29,7 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "mongoose": "^6.2.9"
   }
 }
