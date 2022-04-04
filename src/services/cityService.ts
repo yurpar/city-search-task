@@ -9,27 +9,38 @@ interface SuggestParams {
     q: string;
     latitude: number;
     longitude: number;
-    radius: number;
+    radius: number; // km
     sort: SortField;
 }
 
-const projection = { _id: 0, name: 1, lat: 1, long: 1 }
+const projection = { _id: 0, name: 1, lat: 1, long: 1, country: 1 }
 
 const suggest = async (params: SuggestParams) => {
-    const { q } = params
-    if(!q) return []
+    const { q, longitude, latitude, radius } = params
+    if (!q) return []
 
     const filter = {
-        name: { $regex: `^${params.q}`, $options: 'i' },
-    }
-    const sortParams = {
-        name: (params.sort === SortField.NAME) ? 1 : 0,
-        distance: (params.sort === SortField.DISTANCE) ? -1 : 0,
+        name: { '$regex': `^${params.q}`, '$options': 'i' },
+        location: {
+            '$nearSphere': {
+                '$geometry': {
+                    type: "Point",
+                    coordinates: [longitude, latitude]
+                },
+                '$maxDistance': radius * 1000
+            }
+        }
     }
 
-    return CityModel
-        .find(filter, projection)
-        .sort(sortParams)
+    let query = CityModel
+        .find(filter, projection);
+
+    // default is 'distance' sort
+    if (params.sort === SortField.NAME) {
+        query.sort(SortField.NAME)
+    }
+
+    return query;
 }
 
 export default {
