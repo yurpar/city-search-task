@@ -12,3 +12,11 @@ How to start
 `npm i`
 
 `npm run dev`
+
+TODO
+
+ - docker-compose: add data to mongo db 
+
+ - simplify this :
+`cat ./cities_canada-usa.tsv | awk -F $'\t' '{ print "{ \"_id\": "$1", \"name\": \""$2"\", \"location\": {\"type\": \"Point\", \"coordinates\": ["$6","$5"]}, \"country\": \""$9"\", \"admin\":\""$11"\"}"}' | sed $'1s/^.*$//' | docker exec -i mongodb-cities sh -c 'mongoimport -d task-db -c cities --type=json --drop'`
+
