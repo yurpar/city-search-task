@@ -28,19 +28,25 @@ describe('Suggestions', () => {
         })
 
         it('should return a list of suggestions', (done) => {
+            const radius = 700;
             chai.request(server)
                 .get('/suggestions')
                 .query({
                     q: 'Londo',
                     latitude: 43.70011,
                     longitude: -79.4163,
-                    radius: 5,
+                    radius: 700,
                     sort: 'distance',
                 })
                 .end((err, res) => {
                     expect(res).have.status(200);
                     expect(res.body).have.property('suggestions').that.is.not.empty;
                     expect(res.body.suggestions).have.lengthOf(4);
+                    const city = res.body.suggestions[0]
+                    city.should.have.property('name').that.is.a('string')
+                    city.should.have.property('latitude').that.is.a('number')
+                    city.should.have.property('longitude').that.is.a('number')
+                    city.should.have.property('distance').that.is.a('number').and.lte(radius)
                     done();
                 });
         }).timeout('10s')

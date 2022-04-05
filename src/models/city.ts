@@ -1,12 +1,12 @@
 import { Schema, model } from 'mongoose';
 
-interface City {
+export interface City {
     name: string,
     long: number,
     lat: number,
-    location?: {
+    location: {
         type: 'Point',
-        coordinates: number[]
+        coordinates: [number, number]
     }
 }
 

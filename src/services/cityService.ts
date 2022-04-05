@@ -1,4 +1,5 @@
 import CityModel from '../models/city'
+import { PipelineStage } from "mongoose";
 
 export enum SortField {
     NAME = 'name',
@@ -13,32 +14,38 @@ interface SuggestParams {
     sort: SortField;
 }
 
-const projection = { _id: 0, name: 1, lat: 1, long: 1, country: 1 }
-
 const suggest = async (params: SuggestParams) => {
     const { q, longitude, latitude, radius } = params
     if (!q) return []
 
-    const filter = {
-        name: { '$regex': `^${params.q}`, '$options': 'i' },
-        location: {
-            '$nearSphere': {
-                '$geometry': {
-                    type: "Point",
-                    coordinates: [longitude, latitude]
-                },
-                '$maxDistance': radius * 1000
-            }
+    const pipelines: PipelineStage[] = [{
+        $geoNear: {
+            near: { type: 'Point', coordinates: [longitude, latitude] },
+            distanceField: 'distance',
+            query: {
+                name: { '$regex': `^${params.q}`, '$options': 'i' }
+            },
+            maxDistance: radius * 1000,
+            spherical: true
         }
-    }
-
-    let query = CityModel
-        .find(filter, projection);
+    }]
 
     // default is 'distance' sort
     if (params.sort === SortField.NAME) {
-        query.sort(SortField.NAME)
+        pipelines.push({ $sort: { name: 1 } })
     }
+
+    pipelines.push({
+        $project: {
+            name: { $concat: ['$name', ', ', '$admin', ', ', '$country'] },
+            latitude: { $arrayElemAt: ['$location.coordinates', 0] },
+            longitude: { $arrayElemAt: ['$location.coordinates', 1] },
+            distance: { '$round': [{ $divide: ['$distance', 1000] }, 1] },
+            _id: 0
+        }
+    })
+
+    let query = CityModel.aggregate(pipelines)
 
     return query;
 }
