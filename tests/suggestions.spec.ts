@@ -43,6 +43,6 @@ describe('Suggestions', () => {
                     expect(res.body.suggestions).have.lengthOf(4);
                     done();
                 });
-        })
+        }).timeout('10s')
     })
 })
