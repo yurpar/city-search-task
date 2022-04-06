@@ -1,13 +1,18 @@
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import 'mocha';
 import * as chai from 'chai';
-
 import chaiHttp = require('chai-http');
+import { Connection } from "mongoose";
 
 import { app } from '../src/app'
-import { expect } from "chai";
-import { connectDb } from "../src/main";
+import { connectDb } from "../src/db";
+import CityModel from "../src/models/city";
 
-before(connectDb)
+const { testCities } = require('./testCities')
+
+const { expect } = chai;
+let mongod: MongoMemoryServer;
+let connection: Connection;
 
 const server = app;
 
@@ -16,6 +21,25 @@ chai.use(chaiHttp)
 chai.should();
 
 describe('Suggestions', () => {
+
+    before(async () => {
+        let uri;
+        if (process.env.NODE_ENV === 'test') {
+            mongod = await MongoMemoryServer.create();
+            uri = mongod.getUri();
+        }
+        connection = await connectDb(uri)
+
+        await CityModel.insertMany(testCities)
+    })
+
+    after(async () => {
+        if (mongod) {
+            await mongod.stop()
+        }
+        connection.close()
+    })
+
     describe('GET /suggestions', () => {
         it('should return empty list', (done) => {
             chai.request(server)
@@ -42,11 +66,14 @@ describe('Suggestions', () => {
                     expect(res).have.status(200);
                     expect(res.body).have.property('suggestions').that.is.not.empty;
                     expect(res.body.suggestions).have.lengthOf(4);
+
                     const city = res.body.suggestions[0]
-                    city.should.have.property('name').that.is.a('string')
-                    city.should.have.property('latitude').that.is.a('number')
-                    city.should.have.property('longitude').that.is.a('number')
-                    city.should.have.property('distance').that.is.a('number').and.lte(radius)
+                    const cityJson = JSON.stringify(city, null, 2)
+
+                    city.should.have.property('name').that.is.a('string', cityJson)
+                    city.should.have.property('latitude').that.is.a('number', cityJson)
+                    city.should.have.property('longitude').that.is.a('number', cityJson)
+                    city.should.have.property('distance').that.is.a('number', cityJson).and.lte(radius)
                     done();
                 });
         }).timeout('10s')

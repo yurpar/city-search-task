@@ -8,7 +8,7 @@
     "clear": "rm -rf ./dist",
     "dev": "nodemon --watch src src/main.ts",
     "start": "node dist/main.js",
-    "test": "mocha"
+    "test": "NODE_ENV=test mocha"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +25,7 @@
     "chai-http": "^4.3.0",
     "eslint": "^8.12.0",
     "mocha": "^9.2.2",
+    "mongodb-memory-server": "^8.4.2",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.3"
   },

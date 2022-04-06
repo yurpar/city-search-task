@@ -1,0 +1,100 @@
+{
+    "testCities": [
+        {
+            "name": "London",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    -81.23304,
+                    42.98339
+                ]
+            },
+            "country": "CA",
+            "admin": "08"
+        },
+        {
+            "name": "London",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    -84.08326,
+                    37.12898
+                ]
+            },
+            "country": "US",
+            "admin": "KY"
+        },
+        {
+            "name": "Londontowne",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    -76.54941,
+                    38.93345
+                ]
+            },
+            "country": "US",
+            "admin": "MD"
+        },
+        {
+            "name": "London",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    -83.44825,
+                    39.88645
+                ]
+            },
+            "country": "US",
+            "admin": "OH"
+        },
+        {
+            "name": "New London",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    -72.09952,
+                    41.35565
+                ]
+            },
+            "country": "US",
+            "admin": "CT"
+        },
+        {
+            "name": "Londonderry",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    -71.37395,
+                    42.86509
+                ]
+            },
+            "country": "US",
+            "admin": "NH"
+        },
+        {
+            "name": "New London",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    -88.73983,
+                    44.39276
+                ]
+            },
+            "country": "US",
+            "admin": "WI"
+        },
+        {
+            "name": "New London",
+            "location": {
+                "type": "Point",
+                "coordinates": [
+                    -88.73983,
+                    44.39276
+                ]
+            },
+            "country": "US",
+            "admin": "WI"
+        }
+    ]
+}

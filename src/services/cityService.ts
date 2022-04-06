@@ -37,7 +37,7 @@ const suggest = async (params: SuggestParams) => {
 
     pipelines.push({
         $project: {
-            name: { $concat: ['$name', ', ', '$admin', ', ', '$country'] },
+            name: { '$concat': ['$name', ', ', '$admin', ', ', '$country'] },
             latitude: { $arrayElemAt: ['$location.coordinates', 0] },
             longitude: { $arrayElemAt: ['$location.coordinates', 1] },
             distance: { '$round': [{ $divide: ['$distance', 1000] }, 1] },
@@ -46,6 +46,14 @@ const suggest = async (params: SuggestParams) => {
     })
 
     let query = CityModel.aggregate(pipelines)
+        // .then((docs) => {
+        //     return docs.map(({ name, distance, location, admin, country }) => ({
+        //         name: [name, admin, country].join(', '),
+        //         distance: Math.round(distance / 100) / 10,
+        //         latitude: location.coordinates[0],
+        //         longitude: location.coordinates[1],
+        //     }))
+        // })
 
     return query;
 }

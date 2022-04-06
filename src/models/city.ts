@@ -2,8 +2,8 @@ import { Schema, model } from 'mongoose';
 
 export interface City {
     name: string,
-    long: number,
-    lat: number,
+    country: string,
+    admin: string,
     location: {
         type: 'Point',
         coordinates: [number, number]
@@ -24,8 +24,8 @@ const pointSchema = new Schema({
 
 const citySchema = new Schema<City>({
     name: String,
-    long: Number,
-    lat: Number,
+    country: String,
+    admin: String,
     location: {
         type: pointSchema,
         index: '2dsphere',
