@@ -13,7 +13,17 @@ How to start
 
 `npm run dev`
 
-TODO
+ ###ENV CONFIG
+defaults:
+```
+APP_PORT=300
+MONGODB_URL=mongodb://localhost:27017/task-db
+
+IP_COUNT_LIMIT=5
+IP_TIME_LIMIT=1
+```
+
+ ###TODO
 
  - docker-compose: add data to mongo db 
 

@@ -76,6 +76,60 @@ describe('Suggestions', () => {
                     city.should.have.property('distance').that.is.a('number', cityJson).and.lte(radius)
                     done();
                 });
-        }).timeout('10s')
+        })
+
+        describe('Check IP limits', () => {
+            it('should return 1st OK response', (done) => {
+                chai.request(server)
+                    .get('/suggestions')
+                    .set({ 'X-Client-IP': '127.1.1.1' })
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.have.property('suggestions').with.lengthOf(0);
+                        done();
+                    });
+            })
+            it('should return 2nd OK response', (done) => {
+                chai.request(server)
+                    .get('/suggestions')
+                    .set({ 'X-Client-IP': '127.1.1.1' })
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.have.property('suggestions').with.lengthOf(0);
+                        done();
+                    });
+            })
+            it('should return 3rd OK response', (done) => {
+                chai.request(server)
+                    .get('/suggestions')
+                    .set({ 'X-Client-IP': '127.1.1.1' })
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.have.property('suggestions').with.lengthOf(0);
+                        done();
+                    });
+            })
+
+            it('should return 4th OK response ', (done) => {
+                chai.request(server)
+                    .get('/suggestions')
+                    .set({ 'X-Client-IP': '127.1.1.1' })
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.have.property('suggestions').with.lengthOf(0);
+                        done();
+                    });
+            })
+
+            it('should limit ip with "Too Many Requests" error', (done) => {
+                chai.request(server)
+                    .get('/suggestions')
+                    .set({ 'X-Client-IP': '127.1.1.1' })
+                    .end((err, res) => {
+                        res.should.have.status(429);
+                        done();
+                    });
+            })
+        })
     })
 })
