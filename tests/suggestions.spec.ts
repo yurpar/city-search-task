@@ -130,6 +130,17 @@ describe('Suggestions', () => {
                         done();
                     });
             })
+
+            it('should return OK response for another IP', (done) => {
+                chai.request(server)
+                    .get('/suggestions')
+                    .set({ 'X-Client-IP': '127.2.2.2' })
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.have.property('suggestions').with.lengthOf(0);
+                        done();
+                    });
+            })
         })
     })
 })

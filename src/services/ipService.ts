@@ -9,9 +9,12 @@ export const isIpAllowed = async (ip: string): Promise<boolean> => {
     const nowSeconds = Math.floor(new Date().valueOf() / 1000)
     const periodStartSeconds = nowSeconds - ipTimeLimit
     await new Client({ ip, timestamp: nowSeconds }).save()
+
     const requestCount = await Client.count({ ip, timestamp: { $gt: periodStartSeconds } })
+
+    // TODO clean db once a minute, maybe
+    Client.deleteMany({timestamp: { $lt: periodStartSeconds } })
 
     return requestCount < ipCountLimit;
 }
 
-// TODO clean db
