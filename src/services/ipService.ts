@@ -15,6 +15,6 @@ export const isIpAllowed = async (ip: string): Promise<boolean> => {
     // TODO clean db once a minute, maybe
     ClientModel.deleteMany({timestamp: { $lt: periodStartSeconds } })
 
-    return requestCount < ipCountLimit;
+    return requestCount <= ipCountLimit;
 }
 
