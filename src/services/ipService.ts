@@ -1,4 +1,4 @@
-import Client from "../models/client";
+import ClientModel from "../models/client";
 
 const ipCountLimit = parseInt(process.env.IP_COUNT_LIMIT || '5');
 const ipTimeLimit = parseInt(process.env.IP_TIME_LIMIT || '1') * 60; // minutes to seconds
@@ -8,12 +8,12 @@ export const isIpAllowed = async (ip: string): Promise<boolean> => {
 
     const nowSeconds = Math.floor(new Date().valueOf() / 1000)
     const periodStartSeconds = nowSeconds - ipTimeLimit
-    await new Client({ ip, timestamp: nowSeconds }).save()
+    await new ClientModel({ ip, timestamp: nowSeconds }).save()
 
-    const requestCount = await Client.count({ ip, timestamp: { $gt: periodStartSeconds } })
+    const requestCount = await ClientModel.count({ ip, timestamp: { $gt: periodStartSeconds } })
 
     // TODO clean db once a minute, maybe
-    Client.deleteMany({timestamp: { $lt: periodStartSeconds } })
+    ClientModel.deleteMany({timestamp: { $lt: periodStartSeconds } })
 
     return requestCount < ipCountLimit;
 }
